@@ -85,3 +85,24 @@ card %>%
 ```
 2.5
 No, the groups are imbalanced. This imbalance reveals that growing up near a college is not randomly assigned.
+
+```{r}
+#3.1
+reduced_form <- lm_robust(lwage ~ nearc4 + black + smsa + south + 
+                          exper + expersq + married, 
+                          data = card, se_type = "HC2")
+modelsummary(reduced_form, 
+             statistic = "std.error", 
+             stars = TRUE)
+```
+
+3.1
+The coefficient of 0.041 indicates that, after controlling for race, region, and experience, individuals who grew up near a four-year college earn approximately 4.1% higher hourly wages on average than those who did not.
+
+3.2
+.041/.327= .125
+Wald = .125
+
+3.3
+The Wald estimate indicates that one additional year of education causes hourly wages to increase by approximately 12.5% for those individuals whose schooling decisions were influenced by their proximity to a college.
+
