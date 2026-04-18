@@ -45,6 +45,43 @@ There is a clear positive correlation between years of education and log wages. 
 1.5
 The OLS results might be misleading primarily because of omitted variable bias, specifically concerning innate ability. Individuals who possess high natural talent or motivation are more likely to pursue higher education and are also more likely to earn higher wages regardless of their schooling, which leads OLS to overstate the actual returns to education. Additionally, family background plays a significant role, students from wealthy or well connected families often have the financial support to stay in school longer and the social networks to land high-paying jobs, meaning the higher wages we observe might stem from their family's status rather than the degree itself.
 
+```{r}
+#2.1
+mean(card$nearc4, na.rm = TRUE)
+```
+2.1
+68.2% of respondents in this sample grew up near a 4-year college
 
+```{r}
+#2.2
+first_stage <- lm_robust(educ ~ nearc4 + black + smsa + south + 
+                         exper + expersq + married, 
+                         data = card, se_type = "HC2")
+modelsummary(first_stage, 
+             statistic = c("std.error", "statistic"), 
+             stars = TRUE)
+```
 
+2.2
+The coefficient of 0.327 indicates that, holding all other factors constant, individuals who grew up near a four-year college completed approximately 0.33 more years of education on average compared to those who did not.Yes the positive sign makes perfect sense.Living near a college reduces the price of education by lowering travel costs and allowing students to live at home. When the cost of an activity decreases, we expect the quantity consumed to increase.
 
+2.3
+The t-statistic on nearc4 is 4.061, yielding a first-stage F-statistic of approximately 16.49. Since this exceeds the standard threshold of 10, the instrument is considered strong. Instrument strength is important because weak instruments lead to biased and imprecise 2SLS estimates potentially mirroring the same biases found in OLS.
+
+2.4
+a. Formally, the exclusion restriction requires that the instrument is uncorrelated with the error term in the structural equation.In the context of this study once we control for education and our other control variables, there must be no direct relationship between growing up near a college (nearc4) and log wages (lwage). Essentially, proximity to a college can only influence your paycheck by changing how many years you spent in school.
+b. If people who grow up near colleges are more likely to stay in those often wealthier urban areas, their wages might be higher simply because of a higher cost of living or higher local pay scales, rather than their schooling.
+
+```{r}
+#2.5
+card %>%
+  group_by(nearc4) %>%
+  summarize(
+    mean_black = mean(black, na.rm = TRUE),
+    mean_smsa  = mean(smsa, na.rm = TRUE),
+    mean_south = mean(south, na.rm = TRUE),
+    n = n()
+  )
+```
+2.5
+No, the groups are imbalanced. This imbalance reveals that growing up near a college is not randomly assigned.
