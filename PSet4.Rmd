@@ -106,3 +106,64 @@ Wald = .125
 3.3
 The Wald estimate indicates that one additional year of education causes hourly wages to increase by approximately 12.5% for those individuals whose schooling decisions were influenced by their proximity to a college.
 
+```{r}
+ols <- lm_robust(lwage ~ educ + black + smsa + south + 
+                 exper + expersq + married, 
+                 data = card, se_type = "HC2")
+modelsummary(ols, 
+             statistic = "std.error", 
+             stars = TRUE)
+```
+
+4.1 
+Coefficient on education = 0.071
+
+```{r}
+#4.2
+iv <- iv_robust(lwage ~ educ + black + smsa + south + 
+                exper + expersq + married | 
+                nearc4 + black + smsa + south + 
+                exper + expersq + married, 
+                data = card, se_type = "HC2")
+modelsummary(iv, 
+             statistic = "std.error", 
+             stars = TRUE)
+```
+4.2
+Coefficient on education = 0.125. Yes this matches my earlier Wald estimate. 
+
+```{r}
+#4.3
+modelsummary(list("OLS" = ols, "2SLS" = iv),
+             coef_map = c("educ" = "Years of Education"),
+             gof_map = c("nobs", "r.squared"),
+             stars = TRUE,
+             title = "Comparison of OLS and 2SLS Estimates")
+```
+
+4.4
+a. 2SLS is larger. 
+b. The OLS estimate might be too low because of measurement error, where people misreport their years of schooling, which waters down the result and pushes it toward zero. Additionally, the compliers (the specific people influenced by living near a college) might be students from lower-income backgrounds who get a much larger than average boost in their career from that extra year of education.
+c. The 2SLS estimate is more credible as a causal estimate. While it is less precise than OLS, it uses a natural experiment (proximity to college) to isolate the actual effect of schooling, whereas OLS likely suffers from ability bias or other unobserved factors that make it a simple correlation rather than a causal link.
+
+```{r}
+#4.5
+ols_iq <- lm_robust(lwage ~ educ + IQ + black + smsa + south + 
+                    exper + expersq + married, 
+                    data = card, se_type = "HC2")
+iv_iq <- iv_robust(lwage ~ educ + IQ + black + smsa + south + 
+                   exper + expersq + married | 
+                   nearc4 + IQ + black + smsa + south + 
+                   exper + expersq + married, 
+                   data = card, se_type = "HC2")
+modelsummary(list("OLS (with IQ)" = ols_iq, "2SLS (with IQ)" = iv_iq),
+             coef_map = c("educ" = "Years of Education", "IQ" = "IQ Score"),
+             gof_map = c("nobs", "r.squared"),
+             stars = TRUE)
+```
+
+4.5
+a. The OLS has dropped after including IQ. This confirms that a small portion of what we thought was the return to education was actually just the effect of higher IQ scores. Since IQ and education are positively correlated, omitting IQ caused OLS to slightly overestimate the value of schooling.
+b. The 2SLS estimate dropped from 0.125 to 0.109, but it is still much higher than the OLS estimate. Most importantly, the coefficient on IQ in the 2SLS model is 0.000 and is no longer statistically significant.
+c. The comparison shows that IQ is not the main reason OLS and IV differ. Even after we directly control for IQ, the 2SLS estimate remains nearly double the OLS estimate. This suggests that the difference is likely driven by the fact that marginalized or low-income students who only go to college if one is nearby, get a much higher boost in wages from education than the average person does.
+
