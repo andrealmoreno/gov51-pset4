@@ -167,3 +167,11 @@ a. The OLS has dropped after including IQ. This confirms that a small portion of
 b. The 2SLS estimate dropped from 0.125 to 0.109, but it is still much higher than the OLS estimate. Most importantly, the coefficient on IQ in the 2SLS model is 0.000 and is no longer statistically significant.
 c. The comparison shows that IQ is not the main reason OLS and IV differ. Even after we directly control for IQ, the 2SLS estimate remains nearly double the OLS estimate. This suggests that the difference is likely driven by the fact that marginalized or low-income students who only go to college if one is nearby, get a much higher boost in wages from education than the average person does.
 
+5.1
+The compliers are people from lower-income families for whom the cost and convenience of a local college made the difference between attending or not. Unlike people who go to college regardless of distance, these individuals only stay in school because a four-year campus is close enough to eliminate the need for expensive room, board, or a long-distance move. Because they are often on the economic margin, that extra year of education provides a massive boost to their career trajectory, which explains why your LATE estimate is so much higher than the average.
+
+5.2
+Using the variation in education caused by growing up near a college, the 2SLS estimate indicates that one additional year of schooling causes a 10.9% increase in hourly wages specifically for those compliers who only pursued further education because they lived near a four year campus.
+
+5.3
+The LATE is likely higher than the ATE. This is because the compliers from lower income backgrounds who only stayed in school because a college was nearby—tend to have much higher returns to education than the average person. For these individuals, an extra year of schooling is a high leverage event that can move them from low-wage labor into professional careers, creating a huge percentage jump in earnings. In contrast, for the typical person an extra year of school adds some value but doesn't fundamentally transform their life trajectory to the same degree.
