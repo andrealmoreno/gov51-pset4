@@ -1,0 +1,50 @@
+---
+title: "Pset 4"
+author: "Andrea Moreno"
+date: "2026-04-17"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(estimatr)
+library(modelsummary)
+card <- read_csv("data/card1995.csv")
+```
+
+1.2 
+There are 3010 observations. The unit of observation is the individual, representing young men surveyed in the mid-1970s to study the relationship between education and labor market earnings. 
+
+```{r}
+#1.3
+ggplot(card, aes(x = educ)) +
+  geom_histogram(binwidth = 1, fill = "steelblue", color = "white") +
+  labs(title = "Distribution of Years of Education",
+       x = "Years of Education",
+       y = "Frequency") +
+  theme_minimal()
+mean(card$educ, na.rm = TRUE)
+```
+
+1.3 
+The mean is 13.26 years. In the historgram there are significant spikes at 12 and 16 years. These represent high school and four-year college completion, respectively.These spikes reflect milestones where the completion of a degree provides a specific credential for the labor market.
+
+```{r}
+#1.4
+ggplot(card, aes(x = educ, y = lwage)) +
+  geom_point(alpha = 0.2, color = "darkgrey") +  
+  geom_smooth(method = "lm", color = "red", se = TRUE) +
+  labs(title = "Naïve Relationship: Wages vs. Education",
+       x = "Years of Education",
+       y = "Log of Hourly Wage") +
+  theme_minimal()
+```
+1.4
+There is a clear positive correlation between years of education and log wages. The linear regression line slopes upward, suggesting that individuals with higher levels of schooling generally earn higher hourly wages.This naïve estimate may be biased if unobserved factors—such as underlying ability—are correlated with both schooling and earnings.
+
+1.5
+The OLS results might be misleading primarily because of omitted variable bias, specifically concerning innate ability. Individuals who possess high natural talent or motivation are more likely to pursue higher education and are also more likely to earn higher wages regardless of their schooling, which leads OLS to overstate the actual returns to education. Additionally, family background plays a significant role, students from wealthy or well connected families often have the financial support to stay in school longer and the social networks to land high-paying jobs, meaning the higher wages we observe might stem from their family's status rather than the degree itself.
+
+
+
+
